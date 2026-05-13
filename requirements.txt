@@ -1,0 +1,10 @@
+# Python dependencies if built from source.
+catkin_pkg 
+lark-parser 
+psutil 
+ikpy 
+lap 
+transforms3d 
+pycparser 
+numpy==1.23.5 
+mpy==3.3.4
