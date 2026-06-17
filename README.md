@@ -2,17 +2,15 @@
 
 ![Vulcanexus](https://img.shields.io/badge/Vulcanexus-Humble-00214c?style=for-the-badge&logo=ros)
 ![License](https://img.shields.io/badge/license-Apache%202.0-green?style=for-the-badge&logo=apache)
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge&logo=github-actions&logoColor=white)
+![Build Status](https://img.shields.io/badge/build-manual-lightgrey?style=for-the-badge&logo=github-actions&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Supported Setup](#supported-setup)
 - [File Structure](#file-structure)
-- [Configuration](#configuration)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Supported Distribution](#supported-distribution)
+- [Contact Information](#contact-information)
 - [License](#license)
 
 ## Overview
@@ -25,10 +23,31 @@ The custom node enforces orientation constraints during path planning to ensure 
 
 The node also calls the octomap server in order to detect obstacles in front of the robot to avoid collisions.
 
+## Supported Setup
+
+| Category | Tested On | Expected Compatibility | Not Supported / Unknown |
+| :--- | :--- | :--- | :--- |
+| **Middleware & OS** | **Vulcanexus Humble** (Ubuntu 22.04 LTS) utilizing **Fast DDS** as the default RMW middleware layer | Standard ROS 2 Humble setups | Older ROS distributions (e.g., Foxy, Galactic) or ROS 1 |
+| **Sensors** | **Intel RealSense D455** & **Bpearl 3D Lidar** | Any RGB-D sensor or Lidar providing standardized PointCloud2 data streams | Monocular 2D webcams (lacking spatial depth parameters) |
+| **Manipulators** | **Universal Robots UR10e** | Any ROS 2 / MoveIt2-configured arm with a defined planning group and compatible IK solver | Only tested with the UR10e manipulator (6 DoFs). For more DoFs, unknown outcome. |
+
 ## File Structure
 
-```
+```text
 kiro_handover_execution/
+├── config/
+│   └── handover_params.yaml                  # IK solver & runtime parameters
+├── docker/
+│   ├── Docker-Install.md                     # Docker Installation and Launch Manual
+│   ├── Dockerfile                            # Dockerfile based on Vulcanexus image
+│   ├── run_kiro_hri_exec.bash                # Script to launch the Docker Container
+│   └── setup_hri_exec.sh                     # Script to build the Docker Container
+├── docs/
+│   ├── 01_arise_context.md                   # ARISE Ecosystem Context & Core Integration
+│   ├── 02_interfaces.md                      # Interface Documentation
+│   ├── 03_installation.md                    # Installation and Usage Guide
+│   ├── 04_ros_configuration.md               # ROS2 Configuration
+│   └── 05_role_in_demonstrator.md            # Role in the TRL 6-7 Demonstrator
 ├── include/
 │    └── kiro_handover_execution/
 │           ├── arc_planner.hpp               # Cartesian arc path planning
@@ -38,6 +57,7 @@ kiro_handover_execution/
 │           ├── point_cloud_observer.hpp      # Real-time lidar subscription
 │           ├── path_visualizer.hpp           # RViz visualization publisher
 │           └── Ur10eCollisionModel.hpp       # Capsule-based collision model
+├── media/                                    # Images 
 ├── src/
 │   ├── arc_planner.cpp
 │   ├── bezier_arcs.cpp
@@ -47,154 +67,28 @@ kiro_handover_execution/
 │   ├── point_cloud_observer.cpp
 │   ├── path_visualizer.cpp
 │   └── Ur10eCollisionModel.cpp
-├── config/
-│   └── handover_params.yaml                  # IK solver & runtime parameters
+├── .gitignore
 ├── CMakeLists.txt                            # Build configuration
+├── LICENSE                                   # License information
 ├── package.xml                               # Package metadata and dependencies
-├── requirements.txt                          # Python dependencies if built from source
-├── README.md                                 # Documentation
-└── LICENSE                                   # License information
+├── README.md                                 # Overview of the ARISE KIRO specific package
+└── requirements.txt                          # Python dependencies if built from source
 ```
 
-## Configuration
+> [!WARNING]
+> **1. Hardware Specification (UR10e Manipulator Only)**
+> The geometric constraint validations, forward/inverse kinematics mappings, link name lookups, and capsule-based collision boundary configurations are strictly calibrated and verified for the **Universal Robots UR10e** arm. Running alternative kinematic chains or manipulators from other vendors requires manually updating the joint models, link transformations, and capsule matrices inside the source logic. Manipulators with distinct structural topologies are natively unsupported.
+>
+> **2. Critical Upstream Dependencies**
+> This package operates as an execution and path-validation downstream layer and is strictly dependent on the **[kiro_handover_calculation](https://github.com/nikolaslps/kiro_handover_calculation)** module. The pipeline orchestrator cannot compute trajectories or command the arm autonomously without actively receiving the tracking subject's localized `body_id` and the clustered point cloud target centroids supplied by the upstream service node.
 
-### Runtime Parameters (`handover_params.yaml`)
+## Contact Information
 
-```yaml
-/**:
-  ros__parameters:
-    robot_description_kinematics:
-      ur_manipulator:
-        kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
-        kinematics_solver_timeout: 0.05  # seconds
-        solve_type: Distance             # IK solver type
-```
+For queries regarding the development, replication, or integration of this calculation module within the ARISE framework, feel free to reach out:
 
-### Runtime Arguments 
-1. `use_sim_time:=false`: If `true`, it means simulation time. If `false`, it means working with a real robot.
-2. `move_group_name:=ur_manipulator`: The `name` of the planning group as initialized inside MoveIt2 `robot.srdf` file.
-3. `use_collision_capsules:=false`: If `true`, it means enabling UR10e capsules, bigger than the defaults of MoveIt2. Need to check more `Ur10eCollisionModel.hpp` and `Ur10eCollisionModel.cpp` files for correctly setting up the link names.
-
-### Topic Subscriptions
-
-| Topic | Type | Purpose |
-|-------|------|---------|
-| `/filtered_cloud` | `sensor_msgs/PointCloud2` | Based on this topic the collision detection with the planning scene is performed. Note: Requires manual setup inside `kiro_moveit_config/config/sensors_3d.yaml`. |
-
-#### Example of the `sensors_3d.yaml` file
-
-1. Using **3D Lidar's** topic
-```yaml
-sensors:
-  - bpearl_lidar
-
-bpearl_lidar:
-  sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
-  point_cloud_topic: /bpearl_lidar/points
-  max_range: 5.0
-  point_subsample: 1
-  padding_offset: 0.1
-  padding_scale: 1.0
-  max_update_rate: 1.0
-  filtered_cloud_topic: filtered_cloud
-  filter_box_padding: 0.1
-  filter_box_scale: 1.0
-```
-2. Using **Image's Depth** topic
-
-```yaml
-sensors:
-  - realsense_depth_image
-
-realsense_depth_image:
-    sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
-    image_topic: /camera/camera/depth/image_rect_raw
-    queue_size: 3
-    near_clipping_plane_distance: 0.01
-    far_clipping_plane_distance: 2.0
-    shadow_threshold: 0.2
-    padding_scale: 1.0
-    max_update_rate: 5.0
-    filtered_cloud_topic: filtered_cloud
-```
-
-## Installation
-
-### 1. Docker Container (Recommended)
-For the most stable experience, we recommend using our pre-configured Docker environment.
-* Refer to the [ARISE KIRO Docker Repository](https://github.com/andvatistas/ARISE-KIRO-reusable-modules) for setup assistance.
-* Follow the provided `README.md` within that repository to pull the image and launch the container.
-
-### 2. Building from Source
-**Note**: Building from source has not been fully tested in all environments. We strongly recommend using the Docker version above.
-
-#### Prerequisites
-* **Environment:** ROS 2 Humble (Vulcanexus image recommended).
-* **Hardware/Simulation:** All tests and configurations were performed using a **Universal Robots UR10e** manipulator.
-* **MoveIt 2:** Ensure MoveIt 2 is installed and correctly configured for your robot description.
-#### Setup Workspace
-Clone the repositories into your ROS 2 workspace `src` folder:
-
-```bash
-cd ~/ros2_ws/src
-```
-
-```bash
-# Trac IK Planner
-git clone https://bitbucket.org/traclabs/trac_ik.git
-git -C trac_ik checkout 210f767
-```
-
-```bash
-# Handover service definitions
-git clone https://github.com/nikolaslps/kiro_handover_interfaces
-```
-
-```bash
-# Handover Execution Node
-git clone https://github.com/nikolaslps/kiro_handover_execution.git
-```
-
-Install Dependencies
-```bash
-cd ~/ros2_ws
-sudo rosdep init # May not be necessary
-rosdep update
-apt-get update
-rosdep install --from-paths src --ignore-src -y -r --rosdistro humble
-```
-
-Download the python requirements
-```bash
-cd ~/ros2_ws/src/kiro_handover_execution/
-pip install -r requirements.txt
-```
-
-Build this package by running the following from inside the `ros2_ws`:
-```bash
-cd ~/ros2_ws
-colcon build --symlink-install
-source install/setup.bash
-```
-
-## Usage
-Launch the handover nodes by running:
-```bash
-ros2 run kiro_handover_execution handover_execution --ros-args \
--p use_sim_time:=false \
--p move_group_name:=ur_manipulator \
--p use_collision_capsules:=false \
---params-file src/kiro_handover_execution/config/handover_params.yaml 
-```
-
-In order to trigger the hri body detection and handover calculation to start, run:
-```bash
-ros2 service call /activate_handover kiro_handover_interfaces/srv/ActivateHandover "{handover_phase: true}"
-```
-
-## Supported Distribution
-* **ROS 2 Humble on Vulcanexus image**
-* Tested on the **Universal Robot 10e** manipulator.
+* **Module Developer:** Nikolaos Lappas
+* **GitHub:** [nikolaslps](https://github.com/nikolaslps)
+* **Email:** [nikolas.lappas.2003@gmail.com](mailto:nikolas.lappas.2003@gmail.com)
 
 ## License
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
