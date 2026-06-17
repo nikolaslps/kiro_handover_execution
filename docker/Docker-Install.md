@@ -48,7 +48,7 @@ ros2 run kiro_handover_execution handover_execution --ros-args \
 ```
 
 > [!TIP]
-> Before launching, make sure to check the `ros-args`. For a full deep-dive into configurable parameters, see the [ROS Configuration Documentation](docs/04_ros_configuration.md).
+> Before launching, make sure to check the `ros-args`. For a full deep-dive into configurable parameters, see the [ROS Configuration Documentation](../docs/04_ros_configuration.md).
 
 
 ## Testing the services
