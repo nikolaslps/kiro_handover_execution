@@ -27,6 +27,7 @@ You can access the simulation repository here:
 > ```
 
 ## System Visualization
+1. No visualization of Octomap
 <table>
   <tr>
     <td><img src="../media/ur_planning.png" alt="Robot Motion Planning" width="400"/></td>
@@ -34,6 +35,18 @@ You can access the simulation repository here:
   </tr>
   <tr>
     <td align="center"><b>Figure 1:</b> Motion planning visualization in RViz</td>
+    <td align="center"><b>Figure 2:</b> Successfully arrived at the optimal handover pose</td>
+  </tr>
+</table>
+
+2. With Octomap visualization
+<table>
+  <tr>
+    <td><img src="../media/ur_planning_octomap.png" alt="Robot Motion Planning" width="400"/></td>
+    <td><img src="../media/handover_pose_octomap.png" alt="Robot-Human Interaction" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Figure 1:</b> Motion planning visualization in RViz with Octomap</td>
     <td align="center"><b>Figure 2:</b> Successfully arrived at the optimal handover pose</td>
   </tr>
 </table>
