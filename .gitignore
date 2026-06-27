@@ -10,9 +10,3 @@ hri_exec_ws/
 .vscode/
 .idea/
 .DS_Store
-
-docs/01_arise_context.md
-docs/02_interfaces.md
-docs/05_role_in_demonstrator.md
-
-media/

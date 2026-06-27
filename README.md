@@ -47,7 +47,8 @@ kiro_handover_execution/
 │   ├── 02_interfaces.md                      # Interface Documentation
 │   ├── 03_installation.md                    # Installation and Usage Guide
 │   ├── 04_ros_configuration.md               # ROS2 Configuration
-│   └── 05_role_in_demonstrator.md            # Role in the TRL 6-7 Demonstrator
+│   ├── 05_basic_demo_how_to_use.md           # Documentation for demo (how-to-use)
+│   └── 06_role_in_demonstrator.md            # Role in the TRL 6-7 Demonstrator
 ├── include/
 │    └── kiro_handover_execution/
 │           ├── arc_planner.hpp               # Cartesian arc path planning
