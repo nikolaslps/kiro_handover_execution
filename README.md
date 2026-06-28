@@ -11,6 +11,7 @@
 - [Supported Setup](#supported-setup)
 - [File Structure](#file-structure)
 - [Contact Information](#contact-information)
+- [Acknowledgements](#acknowledgements)
 - [License](#license)
 
 ## Overview
@@ -85,11 +86,20 @@ kiro_handover_execution/
 
 ## Contact Information
 
-For queries regarding the development, replication, or integration of this calculation module within the ARISE framework, feel free to reach out:
+For queries regarding the development, replication, or integration of this execution module within the ARISE framework, feel free to reach out:
 
-* **Module Developer:** Nikolaos Lappas
-* **GitHub:** [nikolaslps](https://github.com/nikolaslps)
+**Maintainer:**
+* **Developer:** [Nikolaos Lappas](https://github.com/nikolaslps)
 * **Email:** [nikolas.lappas.2003@gmail.com](mailto:nikolas.lappas.2003@gmail.com)
+
+**Project Contacts (IKNOWHOW SA):**
+* Maria Kampa: [mkampa@iknowhow.com](mailto:mkampa@iknowhow.com)
+
+## Acknowledgements
+Developed as part of the KIRO experiment, co-funded by the European Union under the Horizon Europe ARISE project (GA 101135784).
 
 ## License
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+
+**Copyright:**
+© ATHENA RC (KIRO partner), on behalf of the KIRO experiment within the ARISE project (Horizon Europe GA 101135784).
