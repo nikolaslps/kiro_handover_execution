@@ -26,6 +26,40 @@ You can access the simulation repository here:
 > ros2 service call /activate_handover kiro_handover_interfaces/srv/ActivateHandover "{handover_phase: true}"
 > ```
 
+## Verification
+Upon a successful launch, you should expect terminal output similar to the following:
+```
+[INFO] [1782650095.748113180] [point_cloud_observer]: Subscribed to point cloud: /filtered_cloud
+[INFO] [1782650095.954341569] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0.206175 seconds
+[INFO] [1782650095.954382344] [moveit_robot_model.robot_model]: Loading robot model 'ur'...
+[INFO] [1782650095.954389146] [moveit_robot_model.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[INFO] [1782650095.977994561] [moveit_kinematics_base.kinematics_base]: IK Using joint shoulder_link -6.28319 6.28319
+[INFO] [1782650095.978023384] [moveit_kinematics_base.kinematics_base]: IK Using joint upper_arm_link -6.28319 6.28319
+[INFO] [1782650095.978030838] [moveit_kinematics_base.kinematics_base]: IK Using joint forearm_link -3.14159 3.14159
+[INFO] [1782650095.978035196] [moveit_kinematics_base.kinematics_base]: IK Using joint wrist_1_link -6.28319 6.28319
+[INFO] [1782650095.978039374] [moveit_kinematics_base.kinematics_base]: IK Using joint wrist_2_link -6.28319 6.28319
+[INFO] [1782650095.978043181] [moveit_kinematics_base.kinematics_base]: IK Using joint wrist_3_link -6.28319 6.28319
+[INFO] [1782650095.978050204] [moveit_kinematics_base.kinematics_base]: Using solve type Distance
+[INFO] [1782650096.010886720] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[INFO] [1782650096.020415502] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[INFO] [1782650096.053113574] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0.0324898 seconds
+[INFO] [1782650096.053145854] [moveit_robot_model.robot_model]: Loading robot model 'ur'...
+[INFO] [1782650096.053151124] [moveit_robot_model.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[INFO] [1782650096.062313188] [moveit_kinematics_base.kinematics_base]: IK Using joint shoulder_link -6.28319 6.28319
+[INFO] [1782650096.062335910] [moveit_kinematics_base.kinematics_base]: IK Using joint upper_arm_link -6.28319 6.28319
+[INFO] [1782650096.062340950] [moveit_kinematics_base.kinematics_base]: IK Using joint forearm_link -3.14159 3.14159
+[INFO] [1782650096.062344536] [moveit_kinematics_base.kinematics_base]: IK Using joint wrist_1_link -6.28319 6.28319
+[INFO] [1782650096.062348434] [moveit_kinematics_base.kinematics_base]: IK Using joint wrist_2_link -6.28319 6.28319
+[INFO] [1782650096.062352752] [moveit_kinematics_base.kinematics_base]: IK Using joint wrist_3_link -6.28319 6.28319
+[INFO] [1782650096.062359694] [moveit_kinematics_base.kinematics_base]: Using solve type Distance
+[INFO] [1782650096.069076522] [move_group_interface]: Ready to take commands for planning group ur_manipulator.
+[INFO] [1782650096.069602494] [moveit_ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[INFO] [1782650101.127571402] [path_visualizer]: PathVisualizer ready. Topic: /handover/BezierCurves  Frame: world
+[INFO] [1782650101.127725877] [handover_execution]: UR base in planning frame: [0.000, 0.000, 0.800]
+[INFO] [1782650101.127752547] [workspace_checker]: WorkspaceChecker ready — UR10e base at [0.000, 0.000, 0.800]  reach=[0.250, 1.000] m
+[INFO] [1782650101.131792841] [handover_execution]: Execution Node spinning. Ready for trigger on '/activate_handover'
+```
+
 ## System Visualization
 1. No visualization of Octomap
 <table>
