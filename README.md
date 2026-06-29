@@ -5,6 +5,8 @@
 ![Build Status](https://img.shields.io/badge/build-manual-lightgrey?style=for-the-badge&logo=github-actions&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
+[![KIRO demo video](https://img.youtube.com/vi/uGGcSsZhrGk/maxresdefault.jpg)](https://www.youtube.com/watch?v=uGGcSsZhrGk "Watch the KIRO on YouTube")
+
 ## Table of Contents
 
 - [Overview](#overview)
