@@ -58,3 +58,8 @@ This package uses the [kiro_handover_interfaces](https://github.com/nikolaslps/k
 ```bash
 ros2 service call /activate_handover kiro_handover_interfaces/srv/ActivateHandover "{handover_phase: true}"
 ```
+
+## Troubleshooting
+* Communication Errors: Verify the ROS domain ID and ensure the container is configured with `$ --network=host` to guarantee discovery between the calculation and execution modules.
+* Dependency Resolution: Maintain consistency across the Vulcanexus ecosystem by ensuring the `$ RMW_IMPLEMENTATION` is set to `$ rmw_fastrtps_cpp`.
+* Manipulator Motion Failures: If the manipulator fails to move, ensure the MoveIt2 planning frame is correctly set in the configuration files. Additionally, check the RViz planning scene for leftover voxels in the Octomap that may be blocking the motion; although the execution node handles internal clearing, manual intervention may be required if persistent obstacles are detected.
